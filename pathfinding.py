@@ -149,7 +149,6 @@ def greedy(start, heuristic, goal):
     """
 
     # Set of arrays needed for the implementations
-    unfinished = 1
     nodeList = []
     expanded = []
     visited = []
@@ -167,7 +166,7 @@ def greedy(start, heuristic, goal):
     distance = 0
 
     # Run until it reaches the destination
-    while (len(nodeList) > 0):
+    while len(nodeList) > 0:
         # pop the next node in the list and make it current
         currentNode = nodeList.pop(0)
         # Take current node and add to expanded
@@ -228,7 +227,66 @@ def astar(start, heuristic, goal):
         - visited is the total number of nodes that were added to the frontier during the execution of the algorithm
         - expanded is the total number of nodes that were expanded, i.e. removed from the frontier to add their neighbors
     """
-    return [], 0, 0, 0
+    # Set of arrays needed for the implementations
+    nodeList = []
+    expanded = []
+    visited = []
+
+    # Using a dictionary to store nodes and its value
+    nodeDict = {}
+
+    # Start the list with the start node and heuristic
+    nodeList.append((start, heuristic(start)))
+    visited.append(start)
+
+    # Set an empty array for the path
+    path = []
+    # Set the distance to 0
+    distance = 0
+
+    # (new) Sort list by the value of heuristics in ascending order.
+    nodeList.sort(key=lambda a: a[1])
+
+    # Run until it reaches the destination
+    while len(nodeList) > 0:
+        # pop the next node in the list and make it current
+        currentNode = nodeList.pop(0)
+        # Take current node and add to expanded
+        expanded.append(currentNode)
+        # Get all the neighbors of the current node
+        neighbors = currentNode[0].get_neighbors()
+        # Run through all the neighbors
+        for neighbor in neighbors:
+            # Checks if the next neighbor node is visited
+            if neighbor.target not in visited:
+                # Put neighbor node in visited
+                visited.append(neighbor.target)
+                # (modified) Set the current node with its value to a variable
+                nodeEntry = [currentNode[0], neighbor.cost]
+                # Add the next current node to the dictionary
+                nodeDict[neighbor.target.get_id()] = nodeEntry
+                # Check if the neighbor node is our goal
+
+                if goal(neighbor.target):
+                    # add the goal to the path
+                    path.insert(0, neighbor.target)
+                    n = neighbor.target
+                    # Run until the goal is our current node
+                    while n != start:
+                        currentEntry = nodeDict[n.get_id()]
+                        path.insert(0, currentEntry[0])
+                        distance = distance + currentEntry[1]
+                        n = currentEntry[0]
+                        nodeList = []
+                    break
+                else:
+                    # (modified)
+                    nodeList.append((neighbor.target, heuristic(neighbor.target)))
+                    if (len(nodeList) > 1000):
+                        nodeList = []
+                        break
+
+    return path, distance, len(visited), len(expanded)
 
 
 def run_all(name, start, heuristic, goal):
