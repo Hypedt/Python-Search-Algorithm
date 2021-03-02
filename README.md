@@ -6,12 +6,12 @@ Report
 Submission
 Lab 1: Search, deadline: March 2nd, AoE
 
-Python
+# Python
 To complete this lab, you will need Python 3. The code should work with any recent version of Python 3, but if you have one that is older than 3.5 you may want to update (it should still work, but I have not tested it). I recommend a standalone installation with Python added to your system’s search path, so you can run python from your system’s command line. Once you have downloaded the framework (described below), you can run it with python pathfinding.py from your development directory. You can also set up an editor like Atom or VSCode to automatically run this file (personally, I use Notepad++ and run the code from the command line, and can only provide limited support for other environments).
 
 If you are new to Python, check out the official tutorial, Python for Java Programmers, and/or Kate Compton’s Python cheatsheet.
 
-Search Algorithms
+# Search Algorithms
 In this lab, you will implement four “different” (directed) graph search algorithms in Python:
 
 Breadth-First Search
@@ -44,11 +44,15 @@ The Austria graph follows this approximate map:
 
 
 
-Report
+# Report
 Your report should consist of three sections:
 
-Briefly describe how you implemented the four algorithms, and any challenges you encountered. How do you determine loops? How do you determine that you can not find a path?
-How did the four algorithms perform on the given test problems? Which algorithm visits/expands the least nodes, which one finds the shortest path? Any surprises? Also note any additional tests you performed on the given test graphs.
-Describe the additional test graph (or graphs!) you added. For small-ish graphs (less than 20 nodes), include a graphical representation. For larger (or even infinite) graphs, a textual or mathematical description will suffice. What search problems did you define on this graph, and how did the algorithms perform?
-Submission
+Briefly describe how you implemented the four algorithms, and any challenges you encountered. 
+How do you determine loops? How do you determine that you can not find a path?
+How did the four algorithms perform on the given test problems? 
+Which algorithm visits/expands the least nodes, which one finds the shortest path? Any surprises? Also note any additional tests you performed on the given test graphs.
+Describe the additional test graph (or graphs!) you added. For small-ish graphs (less than 20 nodes), include a graphical representation. 
+For larger (or even infinite) graphs, a textual or mathematical description will suffice. What search problems did you define on this graph, and how did the algorithms perform?
+
+# Submission
 Submit the finished code (all python files you have!), and your report pdf in a single zip file on Blackboard. Do not forget to put the names and BroncoIDs of both team members in the report as well! Only one of you has to submit, but if both do, please make sure you submit the same file, or I will pick one at random.
