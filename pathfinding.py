@@ -123,7 +123,7 @@ def dfs(start, goal):
                     break
                 else:
                     nodeList.insert(0, neighbor.target)
-                    if len(nodeList) > 10000:
+                    if len(nodeList) > 20000:
                         print("Max stack size exceeded")
                         nodeList = []
                         break
@@ -200,7 +200,7 @@ def greedy(start, heuristic, goal):
                 else:
                     # (modified)
                     nodeList.append((neighbor.target, heuristic(neighbor.target)))
-                    if (len(nodeList) > 1000):
+                    if len(nodeList) > 20000:
                         nodeList = []
                         break
 
@@ -282,7 +282,7 @@ def astar(start, heuristic, goal):
                 else:
                     # (modified)
                     nodeList.append((neighbor.target, heuristic(neighbor.target)))
-                    if (len(nodeList) > 1000):
+                    if len(nodeList) > 10000:
                         nodeList = []
                         break
 
@@ -324,7 +324,7 @@ def print_path(result):
     if path:
         print("Path found with cost", cost)
         for n in path:
-            print(n.name)
+            print(n.get_id())
     else:
         print("No path found")
     print("\n")
@@ -353,6 +353,16 @@ def main():
         return n.get_id() == target
 
     run_all("Austria", graph.Austria["Eisenstadt"], atheuristic, atgoal)
+
+    #target = " "
+
+    # def testHeuristic(n):
+    #     return graph.TestCaseHeuristic[target][n.get_id()]
+    #
+    # def testGoal(n):
+    #     return n.get_id() == target
+
+    #run_all("TestCase" , graph.TestCase["StartingNode"], testHeuristic, testGoal)
 
     target = 2050
 
