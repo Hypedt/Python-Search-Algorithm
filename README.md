@@ -48,9 +48,13 @@ The Austria graph follows this approximate map:
 Your report should consist of three sections:
 
 Briefly describe how you implemented the four algorithms, and any challenges you encountered. 
+
 How do you determine loops? How do you determine that you can not find a path?
+
 How did the four algorithms perform on the given test problems? 
+
 Which algorithm visits/expands the least nodes, which one finds the shortest path? Any surprises? Also note any additional tests you performed on the given test graphs.
+
 Describe the additional test graph (or graphs!) you added. For small-ish graphs (less than 20 nodes), include a graphical representation. 
 For larger (or even infinite) graphs, a textual or mathematical description will suffice. What search problems did you define on this graph, and how did the algorithms perform?
 
