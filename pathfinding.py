@@ -6,6 +6,7 @@ def default_heuristic(n):
     """
     return 0
 
+
 def bfs(start, goal):
     """
     Breadth-First search algorithm. The function is passed a start graph.Node object and a goal predicate.
@@ -20,8 +21,61 @@ def bfs(start, goal):
         - visited is the total number of nodes that were added to the frontier during the execution of the algorithm 
         - expanded is the total number of nodes that were expanded, i.e. removed from the frontier to add their neighbors
     """
-    return [],0,0,0
-    
+
+    # Set of arrays needed for the implementations
+    nodeList = []
+    expanded = []
+    visited = []
+
+    # Using a dictionary to store nodes and its value
+    nodeDict = {}
+
+    # Start the list with the start node
+    nodeList.append(start)
+    visited.append(start)
+
+    # Set an empty array for the path
+    path = []
+    # Set the distance to 0
+    distance = 0
+
+    # Run until it reaches the destination
+    while (len(nodeList) > 0):
+        # pop the next node in the list and make it current
+        currentNode = nodeList.pop(0)
+        # Take current node and add to expanded
+        expanded.append(currentNode)
+        # Get all the neighbors of the current node
+        neighbors = currentNode.get_neighbors()
+        # Run through all the neighbors
+        for neighbor in neighbors:
+            # Checks if the next neighbor node is visited
+            if neighbor.target not in visited:
+                # Put neighbor node in visited
+                visited.append(neighbor.target)
+                # Set the current node with its value to a variable
+                nodeEntry = [currentNode, neighbor.cost]
+                # Add the next current node to the dictionary
+                nodeDict[neighbor.target.get_id()] = nodeEntry
+                # Check if the neighbor node is our goal
+                if goal(neighbor.target):
+                    # add the goal to the path
+                    path.insert(0, neighbor.target)
+                    n = neighbor.target
+                    # Run until the goal is our current node
+                    while n != start:
+                        currentEntry = nodeDict[n.get_id()]
+                        path.insert(0, currentEntry[0])
+                        distance = distance + currentEntry[1]
+                        n = currentEntry[0]
+                    nodeList = []
+                    break
+                else:
+                    nodeList.append(neighbor.target)
+
+    return path, distance, len(visited), len(expanded)
+
+
 def dfs(start, goal):
     """
     Depth-First search algorithm. The function is passed a start graph.Node object, a heuristic function, and a goal predicate.
@@ -36,8 +90,47 @@ def dfs(start, goal):
         - visited is the total number of nodes that were added to the frontier during the execution of the algorithm 
         - expanded is the total number of nodes that were expanded, i.e. removed from the frontier to add their neighbors
     """
-    return [],0,0,0
-    
+    nodeList = []
+    expanded = []
+    visited = []
+
+    nodeDict = {}
+
+    nodeList.append(start)
+    visited.append(start)
+
+    path = []
+    distance = 0
+
+    while len(nodeList) > 0:
+        currentNode = nodeList.pop(0)
+        expanded.append(currentNode)
+        neighbors = currentNode.get_neighbors()
+        for neighbor in neighbors:
+            if neighbor.target not in visited:
+                visited.append(neighbor.target)
+                nodeEntry = [currentNode, neighbor.cost]
+                nodeDict[neighbor.target.get_id()] = nodeEntry
+                if goal(neighbor.target):
+                    path.insert(0, neighbor.target)
+                    n = neighbor.target
+                    while n != start:
+                        currentEntry = nodeDict[n.get_id()]
+                        path.insert(0, currentEntry[0])
+                        distance = distance + currentEntry[1]
+                        n = currentEntry[0]
+                    nodeList = []
+                    break
+                else:
+                    nodeList.insert(0, neighbor.target)
+                    if len(nodeList) > 10000:
+                        print("Max stack size exceeded")
+                        nodeList = []
+                        break
+
+    return path, distance, len(visited), len(expanded)
+
+
 def greedy(start, heuristic, goal):
     """
     Greedy search algorithm. The function is passed a start graph.Node object, a heuristic function, and a goal predicate.
@@ -54,58 +147,100 @@ def greedy(start, heuristic, goal):
         - visited is the total number of nodes that were added to the frontier during the execution of the algorithm 
         - expanded is the total number of nodes that were expanded, i.e. removed from the frontier to add their neighbors
     """
-    return [],0,0,0
-    
+
+    nodeList = []
+    expanded = []
+    visited = []
+    nodeDict = {}
+
+    nodeList.append(start)
+    visited.append(start)
+
+    path = []
+    distance = 0
+    h = 0
+
+    while nodeList:
+        currentNode = nodeList.pop(0)
+        expanded.append(currentNode)
+        neighbors = currentNode.get_neighbors()
+        for neighbor in neighbors:
+            if neighbor.target not in visited:
+                visited.append(neighbor.target)
+                nodeEntry = [currentNode, neighbor.cost]
+                nodeDict[neighbor.target.get_id()] = nodeEntry
+                if (goal(neighbor.target)):
+                    path.insert(0, neighbor.target)
+                    neighborNode = neighbor.target
+                    while (neighborNode != start):
+                        currentEntry = nodeDict[neighborNode.get_id()]
+                        path.insert(0, currentEntry[0])
+                        distance = distance + currentEntry[1]
+                        neighborNode = currentEntry[0]
+                    nodeList = []
+                    break
+                else:
+                    nodeList.insert(0, neighbor.target)
+                    if (len(nodeList)) > 15000:
+                        nodeList = []
+                        break
+
+    print(h)
+
+    return path,distance,len(visited),len(expanded)
+
 
 def astar(start, heuristic, goal):
     """
     A* search algorithm. The function is passed a start graph.Node object, a heuristic function, and a goal predicate.
-    
+
     The start node can produce neighbors as needed, see graph.py for details.
-    
-    The heuristic is a function that takes a node as a parameter and returns an estimate for how far that node is from the goal.    
-    
-    The goal is also represented as a function, that is passed a node, and returns True if that node is a goal node, otherwise False. 
-    
+
+    The heuristic is a function that takes a node as a parameter and returns an estimate for how far that node is from the goal.
+
+    The goal is also represented as a function, that is passed a node, and returns True if that node is a goal node, otherwise False.
+
     The function should return a 4-tuple (path,distance,visited,expanded):
         - path is a sequence of graph.Edge objects that have to be traversed to reach a goal state from the start
-        - distance is the sum of costs of all edges in the path 
-        - visited is the total number of nodes that were added to the frontier during the execution of the algorithm 
+        - distance is the sum of costs of all edges in the path
+        - visited is the total number of nodes that were added to the frontier during the execution of the algorithm
         - expanded is the total number of nodes that were expanded, i.e. removed from the frontier to add their neighbors
     """
-    return [],0,0,0
-    
+    return [], 0, 0, 0
+
+
 def run_all(name, start, heuristic, goal):
     print("running test", name)
     print("Breadth-First Search")
     result = bfs(start, goal)
     print_path(result)
-    
+
     print("\nDepth-First Search")
     result = dfs(start, goal)
     print_path(result)
-    
+
     print("\nGreedy Search (default heuristic)")
     result = greedy(start, default_heuristic, goal)
     print_path(result)
-    
+
     print("\nGreedy Search")
     result = greedy(start, heuristic, goal)
     print_path(result)
-    
+
     print("\nA* Search (default heuristic)")
     result = astar(start, default_heuristic, goal)
     print_path(result)
-    
+
     print("\nA* Search")
     result = astar(start, heuristic, goal)
     print_path(result)
-    
+
     print("\n\n")
 
+
 def print_path(result):
-    (path,cost,visited_cnt,expanded_cnt) = result
-    print("visited nodes:", visited_cnt, "expanded nodes:",expanded_cnt)
+    (path, cost, visited_cnt, expanded_cnt) = result
+    print("visited nodes:", visited_cnt, "expanded nodes:", expanded_cnt)
     if path:
         print("Path found with cost", cost)
         for n in path:
@@ -113,6 +248,7 @@ def print_path(result):
     else:
         print("No path found")
     print("\n")
+
 
 def main():
     """
@@ -129,30 +265,33 @@ def main():
           heuristic is provided, which greatly accelerates the search process. 
     """
     target = "Bregenz"
+
     def atheuristic(n):
         return graph.AustriaHeuristic[target][n.get_id()]
+
     def atgoal(n):
         return n.get_id() == target
-    
+
     run_all("Austria", graph.Austria["Eisenstadt"], atheuristic, atgoal)
-    
-    
+
     target = 2050
+
     def infheuristic(n):
         return abs(n.get_id() - target)
+
     def infgoal(n):
         return n.get_id() == target
-    
+
     run_all("Infinite Graph (simple)", graph.InfNode(1), infheuristic, infgoal)
-    
 
     def multiheuristic(n):
-        return abs(n.get_id()%123 - 63)
+        return abs(n.get_id() % 123 - 63)
+
     def multigoal(n):
-        return n.get_id() > 1000 and n.get_id()%123 == 63
-    
+        return n.get_id() > 1000 and n.get_id() % 123 == 63
+
     run_all("Infinite Graph (multi)", graph.InfNode(1), multiheuristic, multigoal)
-    
+
 
 if __name__ == "__main__":
     main()
