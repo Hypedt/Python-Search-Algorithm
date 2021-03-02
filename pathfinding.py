@@ -134,60 +134,82 @@ def dfs(start, goal):
 def greedy(start, heuristic, goal):
     """
     Greedy search algorithm. The function is passed a start graph.Node object, a heuristic function, and a goal predicate.
-    
+
     The start node can produce neighbors as needed, see graph.py for details.
-    
-    The heuristic is a function that takes a node as a parameter and returns an estimate for how far that node is from the goal.    
-    
-    The goal is also represented as a function, that is passed a node, and returns True if that node is a goal node, otherwise False. 
-    
+
+    The heuristic is a function that takes a node as a parameter and returns an estimate for how far that node is from the goal.
+
+    The goal is also represented as a function, that is passed a node, and returns True if that node is a goal node, otherwise False.
+
     The function should return a 4-tuple (path,distance,visited,expanded):
         - path is a sequence of graph.Edge objects that have to be traversed to reach a goal state from the start
-        - distance is the sum of costs of all edges in the path 
-        - visited is the total number of nodes that were added to the frontier during the execution of the algorithm 
+        - distance is the sum of costs of all edges in the path
+        - visited is the total number of nodes that were added to the frontier during the execution of the algorithm
         - expanded is the total number of nodes that were expanded, i.e. removed from the frontier to add their neighbors
     """
 
+    # Set of arrays needed for the implementations
+    unfinished = 1
     nodeList = []
     expanded = []
     visited = []
+
+    # Using a dictionary to store nodes and its value
     nodeDict = {}
 
-    nodeList.append(start)
+    # Start the list with the start node and heuristic
+    nodeList.append((start, heuristic(start)))
     visited.append(start)
 
+    # Set an empty array for the path
     path = []
+    # Set the distance to 0
     distance = 0
-    h = 0
 
-    while nodeList:
+    # Run until it reaches the destination
+    while (len(nodeList) > 0):
+        # pop the next node in the list and make it current
         currentNode = nodeList.pop(0)
+        # Take current node and add to expanded
         expanded.append(currentNode)
-        neighbors = currentNode.get_neighbors()
+        # Get all the neighbors of the current node
+        neighbors = currentNode[0].get_neighbors()
+        # Run through all the neighbors
         for neighbor in neighbors:
+            # Checks if the next neighbor node is visited
             if neighbor.target not in visited:
+                # Put neighbor node in visited
                 visited.append(neighbor.target)
-                nodeEntry = [currentNode, neighbor.cost]
+                # (modified) Set the current node with its value to a variable
+                nodeEntry = [currentNode[0], neighbor.cost]
+                # Add the next current node to the dictionary
                 nodeDict[neighbor.target.get_id()] = nodeEntry
-                if (goal(neighbor.target)):
+                # Check if the neighbor node is our goal
+
+                if goal(neighbor.target):
+                    # add the goal to the path
                     path.insert(0, neighbor.target)
-                    neighborNode = neighbor.target
-                    while (neighborNode != start):
-                        currentEntry = nodeDict[neighborNode.get_id()]
+                    n = neighbor.target
+                    # Run until the goal is our current node
+                    while n != start:
+                        currentEntry = nodeDict[n.get_id()]
                         path.insert(0, currentEntry[0])
                         distance = distance + currentEntry[1]
-                        neighborNode = currentEntry[0]
-                    nodeList = []
+                        n = currentEntry[0]
+                        nodeList = []
                     break
                 else:
-                    nodeList.insert(0, neighbor.target)
-                    if (len(nodeList)) > 15000:
+                    # (modified)
+                    nodeList.append((neighbor.target, heuristic(neighbor.target)))
+                    if (len(nodeList) > 1000):
                         nodeList = []
                         break
 
-    print(h)
+        # (new) Sort list by the value of heuristics in ascending order.
+        nodeList.sort(key=lambda a: a[1])
 
-    return path,distance,len(visited),len(expanded)
+
+    return path, distance, len(visited), len(expanded)
 
 
 def astar(start, heuristic, goal):
