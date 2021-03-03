@@ -1,5 +1,6 @@
 import graph
 
+
 def default_heuristic(n):
     """
     Default heuristic for A*. Do not change, rename or remove!
@@ -40,7 +41,7 @@ def bfs(start, goal):
     distance = 0
 
     # Run until it reaches the destination
-    while (len(nodeList) > 0):
+    while len(nodeList) > 0:
         # pop the next node in the list and make it current
         currentNode = nodeList.pop(0)
         # Take current node and add to expanded
@@ -206,7 +207,6 @@ def greedy(start, heuristic, goal):
 
         # (new) Sort list by the value of heuristics in ascending order.
         nodeList.sort(key=lambda a: a[1])
-
 
     return path, distance, len(visited), len(expanded)
 
